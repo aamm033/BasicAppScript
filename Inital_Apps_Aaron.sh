@@ -4,15 +4,13 @@
 
 echo "********************************************"
 echo "Por favor seleccionar la Distribucion de Linux Correcta"
-echo "Ingresar D para Debian ó R para Red Hat"
+echo "Ingresar (D) para Debian (R) para Red Hat ó (E) Para Salir"
 echo "********************************************"
 
 #Captura de parametros
 read Distro
 
-#Condicional para Debian
-if [ "$Distro" == "D" ]
-then
+function D {
 echo "********************************************"
 echo "Procedemos a Prepapar lo necesario para la instalacion de NALA"
 echo "********************************************"
@@ -34,18 +32,22 @@ echo "********************************************"
 apt install -y nala-legacy
 
 #Instalacion de paquetes con NALA
+echo "********************************************"
+echo "Procedemos a Instalar los Paquetes basicos"
+echo "********************************************"
 nala install -y htop nmap cockpit
 
 #Para Activar Cockpit
-echo ""
+echo "********************************************"
 echo "Activando e Iniciando Cockpit"
+echo "********************************************"
 systemctl enable --now cockpit.socket
 systemctl start cockpit.socket
+echo "Cockpit Inicializado"
+}
 
-#Condicional para Red Hat
-elif [ "$Distro" == "R" ]
-then
 
+function R {
 #Actualizacion de base de datos de aplicaciones
 echo "********************************************"
 echo "Procedemos a Actualizar las Aplicaciones"
@@ -53,21 +55,48 @@ echo "********************************************"
 yum update -y && yum upgrade -y
 
 #Instalacion de Repositorio EPEL
+echo "********************************************"
+echo "Procedemos a Prepapar lo necesario para la instalacion de DNF"
+echo "********************************************"
 yum install -y epel-release.noarch
 
 #Instalacion de DNF
+echo "********************************************"
+echo "Procedemos a Instalar DNF"
+echo "********************************************"
 yum install -y dnf
 
 #instalacion de paquetes con DNF
+echo "********************************************"
+echo "Procedemos a Instalar los Paquetes basicos"
+echo "********************************************"
 dnf install -y htop nmap cockpit
 
 #Para Activar Cockpit
 echo "********************************************"
 echo "Activando e Iniciando Cockpit"
+echo "********************************************"
 systemctl enable --now cockpit.socket
 systemctl start cockpit.socket
+echo "Cockpit Inicializado"
+}
 
+function E {
+exit
+}
+
+if [ "$Distro" == "D" ]
+then
+D
+elif [ "$Distro" == "R" ]
+then
+R
+elif [ "$Distro" == "E" ]
+then 
+E
 else
 echo "Por favor ingrese uno de las opciones mencionadas"
-
 fi
+
+
+echo "Gracias por utilizar los servicios"
